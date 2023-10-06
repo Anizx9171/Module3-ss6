@@ -13,7 +13,7 @@ public class Qlhs {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        while (true){
+        while (true) {
             System.out.println("""
                     ************************SCHOOL-MANAGEMENT*************************
                     1.	Quản lý học sinh
@@ -22,7 +22,7 @@ public class Qlhs {
                     4.	Thoát
                     """);
             int choice = Integer.parseInt(scanner.nextLine());
-            switch (choice){
+            switch (choice) {
                 case 1:
                     quanLiHS();
                     break;
@@ -76,18 +76,28 @@ public class Qlhs {
     }
 
     private static void showAllEvaluate() {
-        for (int i = 0; i < indexMark; i++) {
-                System.out.println("Name: " + marks[i].student.getStudentName()+", "+ "Subject: " + marks[i].subject.getSubjectName() + "evaluate: " + (marks[i].point<5? "yếu":(marks[i].point<6.5?"Trung bình":(marks[i].point<8?"Khá":(marks[i].point<9?"giỏi":"xuất sắc")))));
+        Arrays.sort(marks, 0, indexMark, (b1, b2) -> Float.compare((float) b1.getStudent().getStudentId(), (float) b2.getStudent().getStudentId()));
+        System.out.println("Nhap ma mon hoc");
+        String maMH = scanner.nextLine();
+        for (int j = 0; j < indexSub; j++) {
+            if (subjects[j].getSubjectId().equals(maMH)) {
+                for (int k = 0; k < indexMark; k++) {
+                    if (marks[k].getSubject().getSubjectId().equals(subjects[j].getSubjectId())) {
+                        System.out.println("Name: " + marks[k].student.getStudentName() + ", " + "Subject: " + marks[k].subject.getSubjectName() + "evaluate: " + (marks[k].point < 5 ? "yếu" : (marks[k].point < 6.5 ? "Trung bình" : (marks[k].point < 8 ? "Khá" : (marks[k].point < 9 ? "giỏi" : "xuất sắc")))));
+                    }
+                }
+            }
         }
     }
+
 
     private static void deleteMark() {
         System.out.println("id mark cần xóa");
         int idDel = Integer.parseInt(scanner.nextLine());
         for (int i = 0; i < indexMark; i++) {
-            if (marks[i].markId == idDel){
+            if (marks[i].markId == idDel) {
                 for (int j = i; j < indexMark; j++) {
-                    marks[j] = marks[j+1];
+                    marks[j] = marks[j + 1];
                 }
                 System.out.println("Xóa thành công");
                 indexMark--;
@@ -100,9 +110,9 @@ public class Qlhs {
         System.out.println("Nhập id môn học");
         String idS = scanner.nextLine();
         for (int i = 0; i < indexSub; i++) {
-            if (subjects[i].getSubjectId().equals(idS)){
+            if (subjects[i].getSubjectId().equals(idS)) {
                 for (int j = 0; j < indexMark; j++) {
-                    if (subjects[j].getSubjectId().equals(marks[i].getSubject().getSubjectId())){
+                    if (subjects[j].getSubjectId().equals(marks[i].getSubject().getSubjectId())) {
                         marks[i].displayData();
                     }
                 }
@@ -114,7 +124,7 @@ public class Qlhs {
         System.out.println("id mark cần sửa");
         int idE = Integer.parseInt(scanner.nextLine());
         for (int i = 0; i < indexMark; i++) {
-            if (marks[i].markId == idE){
+            if (marks[i].markId == idE) {
                 marks[i].displayData();
                 System.out.println("Nhập điểm muốn sửa");
                 marks[i].setPoint();
@@ -126,7 +136,6 @@ public class Qlhs {
 
     private static void showAllMarks() {
         Arrays.sort(marks, 0, indexMark, (b1, b2) -> Float.compare((float) b1.getPoint(), (float) b2.getPoint()));
-
         for (int i = 0; i < indexMark; i++) {
             marks[i].displayData();
         }
@@ -136,37 +145,39 @@ public class Qlhs {
         Student student = new Student();
         Subject subject = new Subject();
         String idObject;
-        while (true){
+        while (true) {
             System.out.println("Nhập id học sinh");
             int idHs = Integer.parseInt(scanner.nextLine());
             boolean flag = false;
             for (int i = 0; i < index; i++) {
-                if (students[i].getStudentId() == idHs){
+                if (students[i].getStudentId() == idHs) {
                     student = students[i];
                     flag = true;
                     break;
                 }
             }
-            if (flag){
+            if (flag) {
                 break;
             }
-        };
+        }
+        ;
 
         while (true) {
             System.out.println("Nhập id môn học");
             String idSj = scanner.nextLine();
             boolean flag = false;
             for (int i = 0; i < indexSub; i++) {
-                if (subjects[i].getSubjectId().equals(idSj)){
+                if (subjects[i].getSubjectId().equals(idSj)) {
                     subject = subjects[i];
                     flag = true;
                     break;
                 }
             }
-            if (flag){
+            if (flag) {
                 break;
             }
-        };
+        }
+        ;
         Mark mark = new Mark();
         mark.inputData(student, subject);
         marks[indexMark++] = mark;
@@ -174,42 +185,42 @@ public class Qlhs {
     }
 
     private static void quanLiSubject() {
-       while (true) {
-           System.out.println("""
-                **********************SUBJECT-MANAGEMENT*************************
-                1.Thêm mới môn học
-                2.Hiển thị danh sách tất cả môn học đã lưu trữ
-                3.Thay đổi thông tin học môn học theo mã id
-                4.Xóa môn học theo mã id (kiểm tra nếu môn học  có điểm thi thì không xóa được
-                5.Thoát
-                """);
-           int choice = Integer.parseInt(scanner.nextLine());
-           switch (choice) {
-               case 1:
-                   addNewSubject();
-                   break;
-               case 2:
-                   showAllSubject();
-                   break;
-               case 3:
-                   updateSubject();
-               case 4:
-                   deleteSubject();
-               case 5:
-                   return;
-               default:
-                   break;
-           }
-       }
+        while (true) {
+            System.out.println("""
+                    **********************SUBJECT-MANAGEMENT*************************
+                    1.Thêm mới môn học
+                    2.Hiển thị danh sách tất cả môn học đã lưu trữ
+                    3.Thay đổi thông tin học môn học theo mã id
+                    4.Xóa môn học theo mã id (kiểm tra nếu môn học  có điểm thi thì không xóa được
+                    5.Thoát
+                    """);
+            int choice = Integer.parseInt(scanner.nextLine());
+            switch (choice) {
+                case 1:
+                    addNewSubject();
+                    break;
+                case 2:
+                    showAllSubject();
+                    break;
+                case 3:
+                    updateSubject();
+                case 4:
+                    deleteSubject();
+                case 5:
+                    return;
+                default:
+                    break;
+            }
+        }
     }
 
     private static void deleteSubject() {
         System.out.println("Nhập id môn học");
         String idEdit = scanner.nextLine();
         for (int i = 0; i < indexSub; i++) {
-            if (subjects[i].getSubjectId().equals(idEdit)){
+            if (subjects[i].getSubjectId().equals(idEdit)) {
                 for (int j = i; j < indexSub; j++) {
-                    subjects[j] =  subjects[j+1];
+                    subjects[j] = subjects[j + 1];
                 }
                 System.out.println("Cập nhật thành công");
                 indexSub--;
@@ -223,7 +234,7 @@ public class Qlhs {
         System.out.println("Nhập id môn học");
         String idEdit = scanner.nextLine();
         for (int i = 0; i < indexSub; i++) {
-            if (subjects[i].getSubjectId().equals(idEdit)){
+            if (subjects[i].getSubjectId().equals(idEdit)) {
                 subjects[i].inputData();
                 System.out.println("Cập nhật thành công");
                 return;
@@ -238,6 +249,7 @@ public class Qlhs {
         }
     }
 
+
     private static void addNewSubject() {
         Subject subject = new Subject();
         subject.inputData();
@@ -245,44 +257,44 @@ public class Qlhs {
     }
 
     private static void quanLiHS() {
-    while (true){
-        System.out.println("""
-                **********************STUDENT-MANAGEMENT************************
-                1.Thêm mới học sinh
-                2.Hiển thị danh sách tất cả học sinh đã lưu trữ
-                3.Thay đổi thông tin học sinh theo mã id
-                4.Xóa học sinh theo mã id (kiểm tra xem nếu sinh viên có điểm thi thì không xóa được)
-                5.Thoát
-                """);
-        int choice = Integer.parseInt(scanner.nextLine());
-        switch (choice){
-            case 1:
-                addNewStudent();
-                break;
-            case 2:
-                showAllStudent();
-                break;
-            case 3:
-                updateStudent();
-                break;
-            case 4:
-                deleteStudent();
-                break;
-            case 5:
-                return;
-            default:
-                break;
+        while (true) {
+            System.out.println("""
+                    **********************STUDENT-MANAGEMENT************************
+                    1.Thêm mới học sinh
+                    2.Hiển thị danh sách tất cả học sinh đã lưu trữ
+                    3.Thay đổi thông tin học sinh theo mã id
+                    4.Xóa học sinh theo mã id (kiểm tra xem nếu sinh viên có điểm thi thì không xóa được)
+                    5.Thoát
+                    """);
+            int choice = Integer.parseInt(scanner.nextLine());
+            switch (choice) {
+                case 1:
+                    addNewStudent();
+                    break;
+                case 2:
+                    showAllStudent();
+                    break;
+                case 3:
+                    updateStudent();
+                    break;
+                case 4:
+                    deleteStudent();
+                    break;
+                case 5:
+                    return;
+                default:
+                    break;
+            }
         }
-    }
     }
 
     private static void deleteStudent() {
         System.out.println("Nhập id học sinh cần xóa");
         int idDelete = Integer.parseInt(scanner.nextLine());
         for (int i = 0; i < index; i++) {
-            if (students[i].getStudentId() == idDelete){
+            if (students[i].getStudentId() == idDelete) {
                 for (int j = i; j < index; j++) {
-                    students[j] = students[j+1];
+                    students[j] = students[j + 1];
                 }
                 System.out.println("Xóa thành công");
                 index--;
@@ -297,7 +309,7 @@ public class Qlhs {
         System.out.println("Nhập id học sinh cần sửa");
         int idEdit = Integer.parseInt(scanner.nextLine());
         for (int i = 0; i < index; i++) {
-            if (students[i].getStudentId() == idEdit){
+            if (students[i].getStudentId() == idEdit) {
                 students[i].inputData(students, index);
                 System.out.println("Cập nhật thành công");
                 return;
